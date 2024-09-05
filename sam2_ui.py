@@ -93,8 +93,29 @@ if __name__ == '__main__':
             popped = PROMPTS.pop(len(PROMPTS))
     
     ### Section 2: Run model
+    print(f'Chosen frame: {chosenStart}')
+
     checkpoint = "./checkpoints/sam2_hiera_large.pt"
     model_cfg = "sam2_hiera_l.yaml"
 
+    # Load up predictor
+    predictor = build_sam2_video_predictor(model_cfg, checkpoint, device=device)
+    inference_state = predictor.init_state(video_path=frames_dir)
+
+    # DEBUG: Change later once negative clicks are supported
+    label = np.array([1], np.int32)
+
+    for i in range(len(PROMPTS)):
+        obj_id = i+1
+        # PROMPTS[obj_id] = np.array([[x, y]], dtype=np.float32)
+        pre_point = PROMPTS[obj_id]
+        point = np.array([[pre_point[0],pre_point[1]]], dtype=np.float32)
+        _, out_obj_ids, out_mask_logits = predictor.add_new_points_or_box(
+            inference_state=inference_state,
+            frame_idx=chosenStart,
+            obj_id=obj_id,
+            points=point,
+            labels=label
+        )
 
     ### Section 3: Save model outputs
