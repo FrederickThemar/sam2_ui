@@ -1,4 +1,5 @@
 import argparse
+import torch
 import cv2
 import os
 
@@ -21,6 +22,14 @@ def on_click(event, x, y, flags, params):
 
 if __name__ == '__main__':
     print("Begin SAM 2 Simple UI.")
+
+    # Set pytorch settings
+    torch.cuda.set_device(2)
+    device = torch.device("cuda")
+    torch.autocast("cuda", dtype=torch.bfloat16).__enter__()
+    if torch.cuda.get_device_properties(0).major >= 8:
+        torch.backends.cuda.matmul.allow_tf32 = True
+        torch.backends.cudnn.allow_tf32 = True
 
     # Set up the CLI argument intake
     parser = argparse.ArgumentParser()
@@ -84,6 +93,8 @@ if __name__ == '__main__':
             popped = PROMPTS.pop(len(PROMPTS))
     
     ### Section 2: Run model
-    print("RUN MODEL")
+    checkpoint = "./checkpoints/sam2_hiera_large.pt"
+    model_cfg = "sam2_hiera_l.yaml"
+
 
     ### Section 3: Save model outputs
