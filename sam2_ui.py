@@ -118,4 +118,15 @@ if __name__ == '__main__':
             labels=label
         )
 
+    # Propogate mask through rest of video
+    video_segments = {}
+    for out_frame_idx, out_obj_ids, out_mask_logits in predictor.propagate_in_video(inference_state):
+        video_segments[out_frame_idx] = {
+            out_obj_id: (out_mask_logits[i] > 0.0).cpu().numpy() for i, out_obj_id in enumerate(out_obj_ids)
+        }
+
     ### Section 3: Save model outputs
+    for out_frame_idx, value in tqdm(video_segments.items()):
+        for out_obj_id, out_mask in value.items():
+            # TEMP
+            continue
