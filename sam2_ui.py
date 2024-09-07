@@ -18,7 +18,22 @@ def on_click(event, x, y, flags, params):
         # PROMPTS[obj_id] = np.array([[x, y]], dtype=np.float32)
         PROMPTS[obj_id] = (x,y)
 
+# Displays all the masked frames one-by-one. 
+def display_masks(video_segments, frame_names, frames_dir):
+    for out_frame_idx, value in video_segments.items():
+        # Load original image
+        img = cv2.imread(frames_dir + frame_names[out_frame_idx])
 
+        # Draw the masks to the original image
+        for out_obj_id, out_mask in value.items():
+            contours, _ = cv2.findContours(out_mask[0].astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            _ = cv2.drawContours(img, contours, -1, (255, 0, 0), cv2.FILLED)
+
+        # Display the image
+        cv2.imshow('masks', img)
+        cv2.waitKey(15)
+
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     print("Begin SAM 2 Simple UI.")
@@ -34,8 +49,10 @@ if __name__ == '__main__':
     # Set up the CLI argument intake
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, help="Directory with input frames.")
+    parser.add_argument("--save", type=str, help="Mode for saving output. 'vid' for mp4, 'dir' for image directory. If not given, will display output.")
     args = parser.parse_args()
     frames_dir = args.input
+    save_mode = args.save
 
     # Check if input exists:
     if frames_dir is None:
@@ -91,7 +108,8 @@ if __name__ == '__main__':
                 PROMPTS = {} # Must empty points dictionary
         elif key == 8 and len(PROMPTS) > 0: # Backspace, remove last point from dict
             popped = PROMPTS.pop(len(PROMPTS))
-    
+    cv2.destroyAllWindows()
+
     ### Section 2: Run model
     print(f'Chosen frame: {chosenStart}')
 
@@ -126,7 +144,11 @@ if __name__ == '__main__':
         }
 
     ### Section 3: Save model outputs
-    for out_frame_idx, value in tqdm(video_segments.items()):
-        for out_obj_id, out_mask in value.items():
-            # TEMP
-            continue
+    if save_mode == "vid":
+        print("ERROR: vid_save NOT IMPLEMENTED")
+        exit(1)
+    elif save_mode == "dir":
+        print("ERROR: dir_save NOT IMPLEMENTED")
+        exit(1)
+    else:
+        display_masks(video_segments, frames, frames_dir)
