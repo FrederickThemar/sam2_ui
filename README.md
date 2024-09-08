@@ -22,6 +22,6 @@ Backspace: Remove the most recent point
 Esc: Accept current points, proceed to masking and propogation
 
 ### Visualizations of UI:
-UI itself:
+UI itself, three objects clicked on:
 ![image](https://github.com/user-attachments/assets/f9c9bf60-59dd-4efc-b4b4-b9a539ae4571)
 
