@@ -35,6 +35,34 @@ def display_masks(video_segments, frame_names, frames_dir):
 
     cv2.destroyAllWindows()
 
+# Save the masks into a video format, overlayed on top of the color frames
+def save_video(video_segments, frame_names, frames_dir):
+    # Get height and width of input frame
+    h, w, _ = cv2.imread(frames_dir + frame_names[0]).shape
+    
+    # Create video writer
+    vid_writer = cv2.VideoWriter(
+        './output.mp4',
+        cv2.VideoWriter_fourcc(*'mp4v'),
+        20.0,
+        (w, h)
+    )
+
+    # Write each mask to the video
+    for out_frame_idx, value in tqdm(video_segments.items()):
+        # Load original image
+        img = cv2.imread(frames_dir + frame_names[out_frame_idx])
+
+        # Draw the masks to the original image
+        for out_obj_id, out_mask in value.items():
+            contours, _ = cv2.findContours(out_mask[0].astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            _ = cv2.drawContours(img, contours, -1, (255, 0, 0), cv2.FILLED)
+
+        # Add frame to video
+        vid_writer.write(img)
+
+    vid_writer.release()
+
 if __name__ == '__main__':
     print("Begin SAM 2 Simple UI.")
 
@@ -49,11 +77,11 @@ if __name__ == '__main__':
     # Set up the CLI argument intake
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, help="Directory with input frames.")
-    parser.add_argument("--save", type=str, help="Mode for saving output. 'vid' for mp4, 'dir' for image directory. If not given, will display output.")
+    parser.add_argument("--mode", type=str, help="Mode for saving output. 'vid' for mp4, 'dir' for image directory. If not given, will display output.")
     args = parser.parse_args()
     frames_dir = args.input
-    save_mode = args.save
-
+    save_mode = args.mode
+    
     # Check if input exists:
     if frames_dir is None:
         print("ERROR: Must include an input directory. Try again.")
@@ -145,8 +173,7 @@ if __name__ == '__main__':
 
     ### Section 3: Save model outputs
     if save_mode == "vid":
-        print("ERROR: vid_save NOT IMPLEMENTED")
-        exit(1)
+        save_video(video_segments, frames, frames_dir)
     elif save_mode == "dir":
         print("ERROR: dir_save NOT IMPLEMENTED")
         exit(1)
