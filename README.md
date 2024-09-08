@@ -25,3 +25,8 @@ Esc: Accept current points, proceed to masking and propogation
 UI itself, three objects clicked on:
 ![image](https://github.com/user-attachments/assets/3432b3cf-4c0f-4e7d-bb63-456b230a018d)
 
+Mask outputs overlayed onto original frame, taken from the "vid" mode:
+![overlay](https://github.com/user-attachments/assets/c2b67cf0-f4b4-48f3-9eeb-04969d191464)
+
+SAM mask displayed as a binary mask, taken from "dir" mode (one image made for each object):
+![40_1](https://github.com/user-attachments/assets/7a55bf01-73ab-47d7-abb3-850df5de9605)
