@@ -6,6 +6,12 @@ Arguments:
 --mode [vid/dir]: Decides if the outputs will be saved as an .mp4, or if they will be saved to a set of directories.
 --output [PATH]: Allows user to specify an output filepath. If not specified, the program will default to the current directory. For mode=dir, it should be an existing directory. For mode=vid, should be an mp4 file.
 
+**Installation:**
+* Pytorch >= 2.3.1
+* Torchvision >= 0.18.1
+* OpenCV >= 4.10.0
+* Follow SAM 2 installation instructions [here](https://github.com/facebookresearch/segment-anything-2?tab=readme-ov-file#installation).
+
 **UI Controls:**
 A and D: move forward or back one frame
 Left click: Add a point to the frame
