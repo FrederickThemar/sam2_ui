@@ -9,6 +9,8 @@ Arguments:
 **Installation:**
 * Pytorch >= 2.3.1 and Torchvision >= 0.18.1, follow instructions [here.](https://pytorch.org/get-started/locally/)
 * OpenCV >= 4.10.0
+    * conda install opencv
+    * pip install opencv-python
 * Follow SAM 2 installation instructions [here](https://github.com/facebookresearch/segment-anything-2?tab=readme-ov-file#installation).
 
 **UI Controls:**
