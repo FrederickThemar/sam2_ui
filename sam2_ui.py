@@ -39,7 +39,6 @@ def display_masks(video_segments, frame_names, frames_dir):
 def save_video(video_segments, frame_names, frames_dir, output_path):
     # If output path not provided, set a default:
     if output_path is None:
-        print("DEFAULT PATH")
         output_path = "./output.mp4"
     
     # Get height and width of input frame
@@ -69,10 +68,34 @@ def save_video(video_segments, frame_names, frames_dir, output_path):
     vid_writer.release()
 
 # Saves each mask to a unique directory
-# def save_masks(video_segments, frame_names, frames_dir, output_dir):
-#     # Create three directories in output_dir
-#     pass
+def save_masks(video_segments, frame_names, frames_dir, output_path, num_items):
+    # If output path isn't specificed by user, use default
+    if output_path is None:
+        output_path = "./output/"
+        os.makedirs(output_path, exist_ok=True)
+
+    # Create three directories in output_dir
+    subdirs = []
+    for i in range(num_items):
+        subdir = f'{output_path}/mask{i+1}'
+        subdirs.append(subdir)
+        os.makedirs(subdir, exist_ok=True)
+
     # Go through masks, saving each mask into a different directory
+    for out_frame_idx, value in tqdm(video_segments.items()):
+        # Load original image, create binary image from it
+        img = cv2.imread(frames_dir + frame_names[out_frame_idx])
+        b_mask = np.zeros(img.shape[:2], np.uint8)
+
+        # Draw the masks to the original image
+        for out_obj_id, out_mask in value.items():
+            b_copy = b_mask.copy()
+            contours, _ = cv2.findContours(out_mask[0].astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            _ = cv2.drawContours(b_copy, contours, -1, (255, 0, 0), cv2.FILLED)
+
+            # Save mask
+            mask_path = f'{subdirs[out_obj_id-1]}/{out_frame_idx}.png'
+            cv2.imwrite(mask_path, b_copy)
 
 if __name__ == '__main__':
     print("Begin SAM 2 Simple UI.")
@@ -109,10 +132,16 @@ if __name__ == '__main__':
             print("ERROR: For this mode, the output path must be an mp4 video.")
             exit(1)
 
+    # Check if output dir exists for dir mode, if specified
+    if save_mode == "dir" and output_path != None:
+        if not os.path.isdir(output_path):
+            print("ERROR: Output path does not exist. Please try again.")
+            exit(1)
+
     ### Section 1: Get the clicks for the model
     # Save the frame names
     frames = sorted([p for p in os.listdir(frames_dir)])
-    
+
     # Display frames until user selects a frame to use for model input
     showFrame = True
     toShow = 0 # Index of frames list to show
@@ -194,7 +223,6 @@ if __name__ == '__main__':
     if save_mode == "vid":
         save_video(video_segments, frames, frames_dir, output_path)
     elif save_mode == "dir":
-        print("ERROR: dir_save NOT IMPLEMENTED")
-        exit(1)
+        save_masks(video_segments, frames, frames_dir, output_path, len(PROMPTS))
     else:
         display_masks(video_segments, frames, frames_dir)
