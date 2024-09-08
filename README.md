@@ -7,8 +7,7 @@ Arguments:
 --output [PATH]: Allows user to specify an output filepath. If not specified, the program will default to the current directory. For mode=dir, it should be an existing directory. For mode=vid, should be an mp4 file.
 
 **Installation:**
-* Pytorch >= 2.3.1
-* Torchvision >= 0.18.1
+* Pytorch >= 2.3.1 and Torchvision >= 0.18.1, follow instructions (here.)[https://pytorch.org/get-started/locally/]
 * OpenCV >= 4.10.0
 * Follow SAM 2 installation instructions [here](https://github.com/facebookresearch/segment-anything-2?tab=readme-ov-file#installation).
 
