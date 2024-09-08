@@ -36,13 +36,18 @@ def display_masks(video_segments, frame_names, frames_dir):
     cv2.destroyAllWindows()
 
 # Save the masks into a video format, overlayed on top of the color frames
-def save_video(video_segments, frame_names, frames_dir):
+def save_video(video_segments, frame_names, frames_dir, output_path):
+    # If output path not provided, set a default:
+    if output_path is None:
+        print("DEFAULT PATH")
+        output_path = "./output.mp4"
+    
     # Get height and width of input frame
     h, w, _ = cv2.imread(frames_dir + frame_names[0]).shape
     
     # Create video writer
     vid_writer = cv2.VideoWriter(
-        './output.mp4',
+        output_path,
         cv2.VideoWriter_fourcc(*'mp4v'),
         20.0,
         (w, h)
@@ -63,6 +68,12 @@ def save_video(video_segments, frame_names, frames_dir):
 
     vid_writer.release()
 
+# Saves each mask to a unique directory
+# def save_masks(video_segments, frame_names, frames_dir, output_dir):
+#     # Create three directories in output_dir
+#     pass
+    # Go through masks, saving each mask into a different directory
+
 if __name__ == '__main__':
     print("Begin SAM 2 Simple UI.")
 
@@ -78,10 +89,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, help="Directory with input frames.")
     parser.add_argument("--mode", type=str, help="Mode for saving output. 'vid' for mp4, 'dir' for image directory. If not given, will display output.")
+    parser.add_argument("--output", type=str, help="Directory where the output is stored. Only used for vid and dir modes. If not provided, defaults to current directory. For vid, the output should be of the form *.mp4")
     args = parser.parse_args()
     frames_dir = args.input
     save_mode = args.mode
-    
+    output_path = args.output
+
     # Check if input exists:
     if frames_dir is None:
         print("ERROR: Must include an input directory. Try again.")
@@ -89,6 +102,12 @@ if __name__ == '__main__':
     elif not os.path.isdir(frames_dir):
         print("ERROR: Input directory does not exist. Try again.")
         exit(1)
+
+    # Check that output path is in right format for vid mode
+    if save_mode == "vid":
+        if output_path != None and output_path.split('/')[-1].split('.')[-1] != 'mp4':
+            print("ERROR: For this mode, the output path must be an mp4 video.")
+            exit(1)
 
     ### Section 1: Get the clicks for the model
     # Save the frame names
@@ -173,7 +192,7 @@ if __name__ == '__main__':
 
     ### Section 3: Save model outputs
     if save_mode == "vid":
-        save_video(video_segments, frames, frames_dir)
+        save_video(video_segments, frames, frames_dir, output_path)
     elif save_mode == "dir":
         print("ERROR: dir_save NOT IMPLEMENTED")
         exit(1)
