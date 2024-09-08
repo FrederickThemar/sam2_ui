@@ -20,3 +20,8 @@ A and D: move forward or back one frame
 Left click: Add a point to the frame
 Backspace: Remove the most recent point
 Esc: Accept current points, proceed to masking and propogation
+
+### Visualizations of UI:
+UI itself:
+<img width="1226" alt="image" src="https://github.com/user-attachments/assets/ea1ae66b-e2ba-415a-946b-6ca2b09eaaaa">
+
