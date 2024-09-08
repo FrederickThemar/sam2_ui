@@ -23,5 +23,5 @@ Esc: Accept current points, proceed to masking and propogation
 
 ### Visualizations of UI:
 UI itself:
-<img width="1226" alt="image" src="https://github.com/user-attachments/assets/ea1ae66b-e2ba-415a-946b-6ca2b09eaaaa">
+![image](https://github.com/user-attachments/assets/5155e7d9-1798-4a4d-9cd5-d7bbe1f0d662)
 
