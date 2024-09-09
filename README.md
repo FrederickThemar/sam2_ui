@@ -16,6 +16,7 @@ Example command: python3 sam2_ui.py --input [DIRECTORY] --mode vid --output [DIR
     * conda install opencv
     * pip install opencv-python
 * Follow SAM 2 installation instructions [here](https://github.com/facebookresearch/segment-anything-2?tab=readme-ov-file#installation).
+* Move or copy "sam2_hiera_large.pt" from SAM 2's directory to sam2_ui/checkpoints/
 
 ### UI Controls:
 A and D: move forward or back one frame
